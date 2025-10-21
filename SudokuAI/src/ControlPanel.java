@@ -8,6 +8,8 @@ public class ControlPanel extends MyPanel{
 	
 	JPanel buttonPanel, dataPanel, timePanel;
 	MyButton bSolve, bFileSelect;
+	JLabel dataLabel;
+	JLabel timerLabel;
 	
 	ControlPanel() {
 		
@@ -39,29 +41,40 @@ public class ControlPanel extends MyPanel{
 	}
 	
 	public JPanel makeDataP() {
-		dataPanel = new MyPanel();
-		JLabel data = new JLabel("Calls");
-		
-		this.applyTheme(data);
-		
-		dataPanel.add(data);
-		
-		return dataPanel;
+	    dataPanel = new MyPanel();
+
+	    dataLabel = new JLabel("Backtracks: 0"); 
+	    this.applyTheme(dataLabel);
+
+	    dataPanel.add(dataLabel);
+
+	    return dataPanel;
+	}
+	
+	public void updateBacktrackCount(int count) {
+	    dataLabel.setText("Backtracks: " + count);
+	    dataLabel.repaint();
 	}
 	
 	public JPanel makeTimeP() {
-		timePanel = new MyPanel();
-		JLabel timeL = new JLabel("Time");
-		JLabel timer = new JLabel("place holder");
-		
-		this.applyTheme(timeL);
-		this.applyTheme(timer);
-		
-		timePanel.add(timeL);
-		timePanel.add(timer);
-		
-		return timePanel;
+	    timePanel = new MyPanel();
+
+	    // Create a label that will show the timer dynamically
+	    timerLabel = new JLabel("Time: 0.00");
+	    this.applyTheme(timerLabel); // apply your styling
+
+	    // Add the label to the panel
+	    timePanel.add(timerLabel);
+
+	    return timePanel;
 	}
+
+	
+	public void updateTimer(double seconds) {
+	    timerLabel.setText(String.format("%.2f s", seconds));
+	    timerLabel.repaint(); // ensures GUI refresh
+	}
+
 	
 	public void applyTheme(JLabel label) {
 		

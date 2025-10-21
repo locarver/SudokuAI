@@ -6,6 +6,7 @@ public class sudokuSolver {
 	
 	public static int backtracks = 0; 
 	
+	
 	 // Function to check if it is safe to place a num at specific index in the grid
    private static boolean placeableCheck(int[][] grid, int row, int col, int num) {
        
@@ -94,18 +95,20 @@ public class sudokuSolver {
    
    // main function to recursively fill in the grid
    public static boolean solveSudoku(int[][] grid, int row, int col, Consumer<UpdateSudoku> onUpdate) {
-
+	   
        // initialize the domains for each index
        Set<Integer>[][] domains = initializeDomains(grid);
 
        // start solving
        return solveWithForwardChecking(grid, domains, onUpdate);
+       
+       
    }
 
    
    // helper function that solves recursively
    private static boolean solveWithForwardChecking(int[][] grid, Set<Integer>[][] domains, Consumer<UpdateSudoku> onUpdate) {
-
+	   Main.endTime = System.nanoTime();
        // find the next empty index
        int row = -1, col = -1;
        boolean found = false;
@@ -122,9 +125,11 @@ public class sudokuSolver {
        }
 
        // base case
-       if (!found)
-           return true;
-
+       if (!found) {
+    	   Main.endTime = System.nanoTime();
+    	   return true;
+       }
+       
        // try each num from the domain of that index
        for (int num : domains[row][col]) {
 

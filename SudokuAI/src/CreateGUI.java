@@ -93,6 +93,8 @@ public class CreateGUI extends JFrame implements ActionListener {
 			fileHandler fileHand = new fileHandler();
 			puzzle = fileHand.fileIntoArray(selectedFile);
 			
+			
+			sudokuSolver.backtracks = 0;
 			grid.updateGrid(puzzle, cells);
 		}
 	}
@@ -103,6 +105,7 @@ public class CreateGUI extends JFrame implements ActionListener {
 		if(e.getSource() == bSolve) {
 			
 			bSolve.setEnabled(false); //set false so can't be pressed again while solving
+			bFileSelect.setEnabled(false);
 			
 			SwingWorker<Boolean, UpdateSudoku> worker = new SwingWorker<>() {
 				
@@ -122,18 +125,29 @@ public class CreateGUI extends JFrame implements ActionListener {
 							}
 						}
 					};
+					Main.startTime = System.nanoTime();
 					return solver.solveSudoku(puzzle, 0, 0, updater);
+				    
+				    
 				}
 				
 				@Override
 				public void process(List<UpdateSudoku> chunks) {
 					for(UpdateSudoku update : chunks) {
 						grid.updateCell(update.row, update.col, update.value, cells);
+						
+						control.updateBacktrackCount(sudokuSolver.backtracks);
+						
+						 control.updateTimer((Main.endTime - Main.startTime) / 1000000000.0);
+
 					}
 				}
+			
+				
 				@Override
 				public void done() {
-					try {
+					try { 
+					    
 						if (get()) {
 							JOptionPane.showMessageDialog(null, "SOLVED");
 						} else {
@@ -145,13 +159,11 @@ public class CreateGUI extends JFrame implements ActionListener {
 					}
 					//re-enable buttons
 					bSolve.setEnabled(true);
+					bFileSelect.setEnabled(true);
 				}
 			};
 			
 			worker.execute();
-			
-			sudokuSolver solvedSudoku = new sudokuSolver();
-			grid.updateGrid(puzzle, cells);
 			
 		}
 		if(e.getSource() == bFileSelect) {
